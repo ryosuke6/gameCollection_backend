@@ -26,6 +26,21 @@ Resources:
             Path: /hello
             Method: get
 
+  matchingFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: matching/
+      Handler: app.lambda_handler
+      Runtime: python3.12
+      Architectures:
+        - x86_64
+      Events:
+        Matching:
+          Type: Api
+          Properties:
+            Path: /matching
+            Method: post
+
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
   # Find out more about other implicit resources you can reference within SAM
@@ -39,3 +54,12 @@ Outputs:
   HelloWorldFunctionIamRole:
     Description: "Implicit IAM Role created for Hello World function"
     Value: !GetAtt HelloWorldFunctionRole.Arn
+  matchingApi:
+    Description: "API Gateway endpoint URL for Prod stage for Matching function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/matching/"
+  matchingFunction:
+    Description: "Matching Lambda Function ARN"
+    Value: !GetAtt matchingFunction.Arn
+  matchingFunctionIamRole:
+    Description: "Implicit IAM Role created for Matching function"
+    Value: !GetAtt matchingFunctionRole.Arn
